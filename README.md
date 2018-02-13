@@ -61,6 +61,8 @@ A criação de registros com essa classe é bastante fácil, basta utilizar `$cr
 - Terceiro parâmetro: Você pode criptografar o valor passando o nome da chave que corresponde ao valor desejado. Padrão: senh;
 - Você pode capturar o número de linhas afetadas utilizando `$crud->getSelect()`.
 
+Se você deseja saber quantas linhas foram inseridas, use `$crud->getInserir` para saber a quantidade de registros inseridos pelo método `$crud->setInserir()`.
+
 ### Selecionando registros
 
     $crud->setSelect('usuario', array('nome', 'email'), array('email' => 'jeconiass2009@hotmail.com'), null, array('nome' => 'ASC'));
@@ -71,6 +73,8 @@ A criação de registros com essa classe é bastante fácil, basta utilizar `$cr
 - Quarto parâmetro: Utilize um valor inteiro para definir o limite de registros selecionados;
 - Quinto parâmetro: Uma array para classificar o conjunto de resultados em ordem ascendente ou decrescente. Use **DESC** ou **ASC**.
 
+Você deve utilizar `$crud->getSelect()` para obter os últimos valores retornados pelo método `$crud->setSelect`.
+
 ### Atualizando registros
 
     $crud->setUpdate('usuario', array('email' => 'joão@hotmail.com', 'nome' => 'João'), array('id' => 5));
@@ -78,6 +82,8 @@ A criação de registros com essa classe é bastante fácil, basta utilizar `$cr
 - Primeiro parâmetro: Nome da tabela;
 - Segundo parâmetro: Uma array com os valores que deseja atualizar.
 - Terceiro parâmetro: Defina qual registro irá atualizar. **where**.
+
+Utilize `$crud->getUpdate` para receber a quantidade de linhas afetadas pelo método `$crud->setUpdate`.
 
 ### Deletando registros
 
@@ -87,13 +93,15 @@ A criação de registros com essa classe é bastante fácil, basta utilizar `$cr
 - Segundo parâmetro: Uma array com os valores que deseja remover.
 - Obs: Se você não passar o segundo parâmetro, **TUDO** será apagado da tabela.
 
+Use `$crud->getDelete` para obter o número de linhas afetadas pelo método `$crud->setDelete()`.
+
 ### Log
 
 Use `$crud->getLog()` para receber o último logo gerado.
 
 ## Changelog
 
-- v1.0.1
+- 1.0.1
 Corrigido problema na instância do CRUD e PDO.
 
 ## Sobre
