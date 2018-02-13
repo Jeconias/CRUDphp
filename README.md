@@ -6,6 +6,10 @@ Se você quer reduzir os números de linhas e evitar muitas querys e conexões c
    - Mini sistema de log
    - Reaproveitar conexão com o Banco de dados
 
+Obtenha a classe:
+
+    composer require pluscrud/crud
+
 # Conhecendo a Classe
 Aqui irei descrever todo o funcionamento da classe e como utilizar todos os métodos que contém disponíveis no momento.
 
@@ -16,21 +20,21 @@ Você pode iniciar a classe de 3 maneiras distintas, quem decide é você! ;)
 Você pode utilizar sua classe de conexão com o banco de dados e passar a conexão atual para o CRUD.
 
     $pdo = 'Sua conexão com o banco de dados';
-    $crud = new Crud($pdo);
+    $crud = new \PlusCrud\Crud\CRUD($pdo);
 
 #### Modo 2:
 Você pode utilizar **define** ou array.
 
     define('CONFIG', ['localhost', 'teste', 'root', '4514' ]);
-    $crud = new Crud(null, CONFIG);
+    $crud = new \PlusCrud\Crud\CRUD(null, CONFIG);
     ------------------------------------------------------------------------------
     $config = array('localhost', 'teste', 'root', '4514');
-    $crud = new Crud(null, $config);
+    $crud = new \PlusCrud\Crud\CRUD(null, $config);
 
 #### Modo 3:
 Se você não quiser utilizar **define** ou **array**, utilize os métodos internos do CRUD.  
 
-    $crud = new Crud();
+    $crud = new \PlusCrud\Crud\CRUD();
     $crud->setDBHost('localhost');
     $crud->setDBName('teste');
     $crud->setDBUser('root');
@@ -89,7 +93,8 @@ Use `$crud->getLog()` para receber o último logo gerado.
 
 ## Changelog
 
-Vazio, por enquanto!
+- v1.0.1
+Corrigido problema na instância do CRUD e PDO.
 
 ## Sobre
 - Autor: Jeconias Santos

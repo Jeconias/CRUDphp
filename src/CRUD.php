@@ -9,6 +9,7 @@
  *
  *  Ainda irei finalizar os comentários!
  */
+namespace PlusCrud\Crud;
 
 class Crud
 {
@@ -139,8 +140,8 @@ class Crud
     private function pdo($host, $dbname, $dbuser, $dbpass)
     {
         try {
-            $pdo = new PDO('mysql:host='.$host.'; dbname='.$dbname, $dbuser, $dbpass, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdo = new \PDO('mysql:host='.$host.'; dbname='.$dbname, $dbuser, $dbpass, array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
+            $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             $this->conexao = $pdo;
             $this->log .= '<br><b>Conexão com o banco de dados:</b><br>';
             $this->log .= 'Inicializada | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
