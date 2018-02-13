@@ -16,7 +16,7 @@
   },
   "autoload":{
     "psr-4":{
-      "PlusCrud\\Crud": "src/"
+      "PlusCrud\\Crud\\": "src/"
     }
   }
 }
