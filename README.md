@@ -25,10 +25,10 @@ Você pode utilizar sua classe de conexão com o banco de dados e passar a conex
 #### Modo 2:
 Você pode utilizar **define** ou array.
 
-    define('CONFIG', ['localhost', 'teste', 'root', '4514' ]);
+    define('CONFIG', ['localhost', 'teste', 'root', 'senha' ]);
     $crud = new \PlusCrud\Crud\CRUD(null, CONFIG);
     ------------------------------------------------------------------------------
-    $config = array('localhost', 'teste', 'root', '4514');
+    $config = array('localhost', 'teste', 'root', 'senha');
     $crud = new \PlusCrud\Crud\CRUD(null, $config);
 
 #### Modo 3:
@@ -38,7 +38,7 @@ Se você não quiser utilizar **define** ou **array**, utilize os métodos inter
     $crud->setDBHost('localhost');
     $crud->setDBName('teste');
     $crud->setDBUser('root');
-    $crud->setDBPass('4514');
+    $crud->setDBPass('senha');
     $crud->run();
 
 - Se você utilizar o modo 3 você deve chamar o `$crud->run()` para carregar a conexão com o banco de dados.
@@ -54,14 +54,14 @@ Agora que sabemos como iniciar a conexão com o banco de dados vamos aprender a 
 ### Criando registros
 A criação de registros com essa classe é bastante fácil, basta utilizar `$crud->setInserir()`.
 
-    $crud->setInserir('usuario', array('nome' => 'Jeconias', 'email' => 'jeconiass2009@hotmail.com', 'senha' => '12'));
+    $crud->setInserir('usuario', array('nome' => 'Jeconias', 'email' => 'jeconiass2009@hotmail.com', 'senha' => 'senha'));
 
 - Primeiro parâmetro: Insira o nome da sua tabela;
 - Segundo parâmetro: Insira uma array com as chaves iguais a coluna da sua tabela;
-- Terceiro parâmetro: Você pode criptografar o valor passando o nome da chave que corresponde ao valor desejado. Padrão: senh;
+- Terceiro parâmetro: Você pode criptografar o valor passando o nome da chave que corresponde ao valor desejado. Padrão: senha;
 - Você pode capturar o número de linhas afetadas utilizando `$crud->getSelect()`.
 
-Se você deseja saber quantas linhas foram inseridas, use `$crud->getInserir` para saber a quantidade de registros inseridos pelo método `$crud->setInserir()`.
+Se você deseja saber quantas linhas foram inseridas, use `$crud->getInserir`.
 
 ### Selecionando registros
 
@@ -77,7 +77,7 @@ Você deve utilizar `$crud->getSelect()` para obter os últimos valores retornad
 
 ### Atualizando registros
 
-    $crud->setUpdate('usuario', array('email' => 'joão@hotmail.com', 'nome' => 'João'), array('id' => 5));
+    $crud->setUpdate('usuario', array('email' => 'exemplo@hotmail.com', 'nome' => 'exemplo'), array('id' => 5));
 
 - Primeiro parâmetro: Nome da tabela;
 - Segundo parâmetro: Uma array com os valores que deseja atualizar.
@@ -103,6 +103,9 @@ Use `$crud->getLog()` para receber o último logo gerado.
 
 - 1.0.1
 Corrigido problema na instância do CRUD e PDO.
+
+- 1.0.2
+Adicionado mais comentários na classe
 
 ## Sobre
 - Autor: Jeconias Santos
