@@ -1,9 +1,9 @@
 <?php
 /**
  * @author     Jeconias Santos <jeconiass2009@hotmail.com>
- * @license    https://opensource.org/licenses/MIT MIT License
+ * @license    https://opensource.org/licenses/MIT - MIT License
  * @copyright  Jeconias Santos
- * @version    v1.0.0
+ * @version    v1.0.2
  *  Você pode utilizar essa class como quiser, contando que mantenha os créditos
  *  originais em todas as cópias!
  *
@@ -51,6 +51,7 @@ class Crud
         $this->DBPass = $v;
     }
 
+    //INSERIR REGISTROS NO BANCO DE DADOS
     public function setInserir($tabela, $valores, $senha = 'senha')
     {
         if (!is_array($valores)) {
@@ -61,6 +62,8 @@ class Crud
         }
         $this->inserir($tabela, $valores, $senha);
     }
+
+    //CAPTURAR DADOS DO BANCO DE DADOS
     public function setSelect($tabela, $valores, $where = null, $limit = null, $order = null)
     {
         if (!is_array($valores)) {
@@ -82,6 +85,8 @@ class Crud
 
         $this->select($tabela, $valores, $where, $limit, $order);
     }
+
+    //ATUALIZAR DADOS NO BANCO DE DADOS
     public function setUpdate($tabela, $valores, $where, $senha = 'senha')
     {
         if (!is_array($valores)) {
@@ -98,6 +103,8 @@ class Crud
 
         $this->update($tabela, $valores, $where, $senha);
     }
+
+    //REMOVER REGISTROS DO BANCO DE DADOS
     public function setDelete($tabela, $where = null)
     {
         if ($where !== null && !is_array($where)) {
@@ -109,34 +116,38 @@ class Crud
 
         $this->Delete($tabela, $where);
     }
-
+    //RECEBER O NÚMEROS DE LINHAS INSERIDAS
     public function getInserir()
     {
         return $this->Inserido;
     }
+    //RECEBER OS VALORES RETORNADOS DO BANCO DE DADOS
     public function getSelect()
     {
         return $this->Selecionado;
     }
+    //EXIBIR O NÚMERO DE LINHAS AFETADAS DURANTE O UPDATE
     public function getUpdate()
     {
         return $this->Atualizado;
     }
+    //RETORNA O NÚMERO DE LINHAS DELETADAS DO BANCO DE DADOS
     public function getDelete()
     {
         return $this->Removido;
     }
-
+    //RETORNA O LOG GERADO DURANTE A UTILIZAÇÃO DA INSTÂNCIA DA CLASS
     public function getLog()
     {
         return $this->log;
     }
-
+    /*INICIA UMA CONEXÃO COM O BANCO DE DADOS QUANDO O USUÁRIO PASSA OS
+     * VALORES PELOS MÉTODOS ESPECIFICOS. */
     public function run()
     {
         $this->pdo($this->DBHost, $this->DBName, $this->DBUser, $this->DBPass);
     }
-
+    //INICIAR UMA CONEXÃO COM O BANCO DE DADOS
     private function pdo($host, $dbname, $dbuser, $dbpass)
     {
         try {
@@ -149,7 +160,7 @@ class Crud
             die("Erro de conexão: " . $e->getMessage());
         }
     }
-
+    //INSERIR OS DADOS
     private function inserir($tabela, $fields, $senha)
     {
         try {
@@ -181,7 +192,7 @@ class Crud
             return false;
         }
     }
-
+    //SELECIONAR REGISTROS
     private function select($tabela, $valores, $where, $limit, $orderBy)
     {
         try {
@@ -242,9 +253,7 @@ class Crud
             return false;
         }
     }
-
-
-
+    //ATUALIZAR REGISTROS
     private function update($tabela, $valores, $where, $senha)
     {
         try {
@@ -292,7 +301,7 @@ class Crud
             return false;
         }
     }
-
+    //REMOVER REGISTROS
     private function Delete($tabela, $where)
     {
         try {
