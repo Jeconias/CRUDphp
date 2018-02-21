@@ -105,7 +105,10 @@ Use `$crud->getLog()` para receber o último logo gerado.
 Corrigido problema na instância do CRUD e PDO.
 
 - 1.0.2
-Adicionado mais comentários na classe
+Adicionado mais comentários na classe.
+
+- 1.0.3
+Correção do método hash.
 
 ## Sobre
 - Autor: Jeconias Santos
