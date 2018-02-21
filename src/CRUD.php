@@ -282,7 +282,7 @@ class Crud
             $query = $this->conexao->prepare($sql);
             foreach ($valores as $key => $value) {
                 if ($key == $senha) {
-                    $query->bindvalue(':'.$key, $this->setHash($value));
+                    $query->bindvalue(':'.$key, $this->hash($value));
                 } else {
                     $query->bindvalue(':'.$key, $value);
                 }
