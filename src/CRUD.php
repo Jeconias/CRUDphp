@@ -3,7 +3,7 @@
  * @author     Jeconias Santos <jeconiass2009@hotmail.com>
  * @license    https://opensource.org/licenses/MIT - MIT License
  * @copyright  Jeconias Santos
- * @version    v1.0.2
+ * @version    v1.0.4
  *  Você pode utilizar essa class como quiser, contando que mantenha os créditos
  *  originais em todas as cópias!
  *
@@ -164,14 +164,53 @@ class Crud
     private function inserir($tabela, $fields, $senha)
     {
         try {
+          if (array_sum(array_map('is_array', $fields)) != 0) {
+            //TOTAL DE CHAVES DE UMA ARRAY
+            $keys_count = count($fields[0]);
+            //NÚMERO DE ARRAYS VEZES O TOTAL DE CHAVES
+            $total_count = count($fields) * $keys_count;
+            //OS NOMES DAS CHAVES
+            $chaves = implode(', ', array_keys($fields[0]));
+
+            //ESSE WHILE GERA O SQL DE ACORDO COM $total_count, OU SEJA, SE O $total_count FOR IGUAL A 10
+            // O WHILE VAI GERAR ALGO ASSIM: (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)
+            $i = 1;
+            $controle = 1;
+            $SQL_Generator = '(?';
+            while ($i < $total_count) {
+                if (($controle * $keys_count) == $i) {
+                    $SQL_Generator .= '), (';
+                    $SQL_Generator .= '?';
+                    $controle++;
+                } else {
+                    $SQL_Generator .= ', ?';
+                }
+                $i++;
+            }
+            $SQL_Generator .= ')';
+            $SQL = 'INSERT INTO '.$tabela.' ('.$chaves.') VALUES '.$SQL_Generator;
+            $query = $this->conexao->prepare($SQL);
+
+            $count = 1;
+            array_walk_recursive($fields, function($value, $key) use (&$count, &$query, &$senha){
+              if ($key == $senha) {
+                  $query->bindvalue($count, $this->hash($value));
+              } else {
+                  $query->bindValue($count, $value);
+              }
+              $count++;
+            });
+            $query->execute();
+          }else {
             foreach ($fields as $key => $value) {
-                $keys [] = ':'.$key;
+                $first_keys [] = ':'.$key;
             }
 
-            $first_keys = implode(', ', array_keys($fields));
-            $last_keys = implode(', ', array_values($keys));
+            $keys = implode(', ', array_keys($fields));
+            $values = implode(', ', array_values($first_keys));
 
-            $sql = 'INSERT INTO '.$tabela.' ('.$first_keys.') VALUES ('.$last_keys.')';
+            $sql = 'INSERT INTO '.$tabela.' ('.$keys.') VALUES ('.$values.')';
+
             $query = $this->conexao->prepare($sql);
 
             foreach ($fields as $key => $value) {
@@ -182,10 +221,11 @@ class Crud
                 }
             }
             $query->execute();
-            $this->log .= '<b>Inserindo dados:</b><br>';
-            $this->log .= 'Sucesso | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
-            $this->Inserido = $query->rowCount();
-            return true;
+          }
+          $this->log .= '<b>Inserindo dados:</b><br>';
+          $this->log .= 'Sucesso | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
+          $this->Inserido = $query->rowCount();
+          return true;
         } catch (\Exception $e) {
             $this->log .= '<b>Inserindo dados:</b><br>';
             $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
