@@ -57,9 +57,27 @@ A criação de registros com essa classe é bastante fácil, basta utilizar `$cr
     $crud->setInserir('usuario', array('nome' => 'Jeconias', 'email' => 'jeconiass2009@hotmail.com', 'senha' => 'senha'));
 
 - Primeiro parâmetro: Insira o nome da sua tabela;
-- Segundo parâmetro: Insira uma array com as chaves iguais a coluna da sua tabela;
+- Segundo parâmetro:
+    - Insira uma array com as chaves iguais a coluna da sua tabela
+        ex:
+`array('nome' => 'Jeconias', 'email' => 'jeconiass2009@hotmail.com', 'senha' => 'senha');`
+
+    - Uma array multidimensional.
+
+    ex:
+```
+<?php
+$arr = array(
+            0 => array(
+                'nome' => 'José',
+                'data' => '2018-03-22'),
+            1 => array(
+                'nome' => 'Jeconias',
+                'data' => '2018-03-25')
+          );
+```
+
 - Terceiro parâmetro: Você pode criptografar o valor passando o nome da chave que corresponde ao valor desejado. Padrão: senha;
-- Você pode capturar o número de linhas afetadas utilizando `$crud->getSelect()`.
 
 Se você deseja saber quantas linhas foram inseridas, use `$crud->getInserir`.
 
@@ -109,6 +127,9 @@ Adicionado mais comentários na classe.
 
 - 1.0.3
 Correção do método hash.
+
+- 1.0.4
+Suporte para múltiplos "inserts"
 
 ## Sobre
 - Autor: Jeconias Santos
