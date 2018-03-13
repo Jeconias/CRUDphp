@@ -126,19 +126,29 @@ Use `$crud->getLog()` para receber o último logo gerado.
 ## Changelog
 
 - 1.0.1
+
 Corrigido problema na instância do CRUD e PDO.
 
 - 1.0.2
+
 Adicionado mais comentários na classe.
 
 - 1.0.3
+
 Correção do método hash.
 
 - 1.0.4
-Suporte para múltiplos "inserts"
+
+Suporte para múltiplos "inserts".
 
 - 1.0.5
-Suporte para SQL montada
+
+Suporte para SQL montada.
+
+- 1.0.6
+
+Comentários e pequenas correções;
+Melhorado o sistema de logs.
 
 ## Sobre
 - Autor: Jeconias Santos
