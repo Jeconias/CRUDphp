@@ -3,7 +3,7 @@
  * @author     Jeconias Santos <jeconiass2009@hotmail.com>
  * @license    https://opensource.org/licenses/MIT - MIT License
  * @copyright  Jeconias Santos
- * @version    v1.0.5
+ * @version    v1.0.6
  *  Você pode utilizar essa class como quiser, contando que mantenha os créditos
  *  originais em todas as cópias!
  *
@@ -33,32 +33,42 @@ class Crud
             $this->pdo($config[0], $config[1], $config[2], $config[3]);
         }
     }
-
+    //ENDEREÇO DO SERVIDOR
     public function setDBHost($v)
     {
         $this->DBHost = $v;
+        $this->log .= 'Adicionado endereço do servidor do banco de dados;<br>';
     }
+    //NOME DO BANCO DE DADOS
     public function setDBName($v)
     {
         $this->DBName = $v;
+        $this->log .= 'Adicionado nome do banco de dados;<br>';
     }
+    //NOME DO USUÁRIO DO BANCO DE DADOS
     public function setDBUser($v)
     {
         $this->DBUser = $v;
+        $this->log .= 'Adicionado usuário do banco de dados;<br>';
     }
+    //SENHA DO BANCO DE DADOS
     public function setDBPass($v)
     {
         $this->DBPass = $v;
+        $this->log .= 'Adicionado senha do banco de dados;<br>';
     }
 
     //INSERIR REGISTROS NO BANCO DE DADOS
     public function setInserir($tabela, $valores, $senha = 'senha')
     {
         if (!is_array($valores)) {
-            $this->log .= '<b>Inserindo dados:</b><br>';
-            $this->log .= 'Erro: A variável <b>$valores</b> do método <b>setInserir</b> não é uma array<br>';
+            $this->log .= 'Erro: A variável <b>$valores</b> do método <b>setInserir</b> não é uma array;<br>';
             $this->Inserido = false;
             return false;
+        }
+        if ($this->conexao == null) {
+          $this->log .= 'Erro: Conexão com o banco de dados não estabelecida;<br>';
+          return false;
         }
         $this->inserir($tabela, $valores, $senha);
     }
@@ -67,20 +77,22 @@ class Crud
     public function setSelect($tabela, $valores, $where = null, $limit = null, $order = null)
     {
         if (!is_array($valores)) {
-            $this->log .= '<b>Selecionado dados:</b><br>';
-            $this->log .= 'Erro: A variável <b>$valores</b> do método <b>setSelect</b> não é uma array<br>';
+            $this->log .= 'Erro: A variável <b>$valores</b> do método <b>setSelect</b> não é uma array;<br>';
             $this->Selecionado = false;
             return false;
         } elseif ($where !== null && !is_array($where)) {
-            $this->log .= '<b>Selecionado dados:</b><br>';
-            $this->log .= 'Erro: A variável <b>$where</b> do método <b>setSelect</b> não é uma array<br>';
+            $this->log .= 'Erro: A variável <b>$where</b> do método <b>setSelect</b> não é uma array;<br>';
             $this->Selecionado = false;
             return false;
         } elseif ($order !== null && !is_array($order)) {
-            $this->log .= '<b>Selecionado dados:</b><br>';
-            $this->log .= 'Erro: A variável <b>$order</b> do método <b>setSelect</b> não é uma array<br>';
+            $this->log .= 'Erro: A variável <b>$order</b> do método <b>setSelect</b> não é uma array;<br>';
             $this->Selecionado = false;
             return false;
+        }
+
+        if ($this->conexao == null) {
+          $this->log .= 'Erro: Conexão com o banco de dados não estabelecida;<br>';
+          return false;
         }
 
         $this->select($tabela, $valores, $where, $limit, $order);
@@ -89,6 +101,10 @@ class Crud
     //SELECIONAR REGISTROS COM SQL MONTADA
     public function setSelectsql($sql, $valores)
     {
+        if ($this->conexao == null) {
+          $this->log .= 'Erro: Conexão com o banco de dados não estabelecida;<br>';
+          return false;
+        }
         $this->selectSql($sql, $valores);
     }
 
@@ -96,15 +112,18 @@ class Crud
     public function setUpdate($tabela, $valores, $where, $senha = 'senha')
     {
         if (!is_array($valores)) {
-            $this->log .= '<b>Atualizando dados:</b><br>';
-            $this->log .= 'Erro: A variável <b>$valores</b> do método <b>setUpdate</b> não é uma array<br>';
+            $this->log .= 'Erro: A variável <b>$valores</b> do método <b>setUpdate</b> não é uma array;<br>';
             $this->Atualizado = false;
             return false;
         } elseif ($where !== null && !is_array($where)) {
-            $this->log .= '<b>Atualizando dados:</b><br>';
-            $this->log .= 'Erro: A variável <b>$where</b> do método <b>setUpdate</b> não é uma array<br>';
+            $this->log .= 'Erro: A variável <b>$where</b> do método <b>setUpdate</b> não é uma array;<br>';
             $this->Atualizado = false;
             return false;
+        }
+
+        if ($this->conexao == null) {
+          $this->log .= 'Erro: Conexão com o banco de dados não estabelecida;<br>';
+          return false;
         }
 
         $this->update($tabela, $valores, $where, $senha);
@@ -114,10 +133,14 @@ class Crud
     public function setDelete($tabela, $where = null)
     {
         if ($where !== null && !is_array($where)) {
-            $this->log .= '<b>Deletando dados:</b><br>';
-            $this->log .= 'Erro: A variável <b>$where</b> do método <b>setDelete</b> não é uma array<br>';
+            $this->log .= 'Erro: A variável <b>$where</b> do método <b>setDelete</b> não é uma array;<br>';
             $this->Removido = false;
             return false;
+        }
+
+        if ($this->conexao == null) {
+          $this->log .= 'Erro: Conexão com o banco de dados não estabelecida;<br>';
+          return false;
         }
 
         $this->Delete($tabela, $where);
@@ -125,21 +148,25 @@ class Crud
     //RECEBER O NÚMEROS DE LINHAS INSERIDAS
     public function getInserir()
     {
+        $this->log .= 'Números de linha inseridas durante o último <b>INSERT: </b>'.$this->Inserido.';<br>';
         return $this->Inserido;
     }
     //RECEBER OS VALORES RETORNADOS DO BANCO DE DADOS
     public function getSelect()
     {
+        $this->log .= 'Números de dados selecionados durante o último <b>SELECT: </b>'.count($this->Selecionado).';<br>';
         return $this->Selecionado;
     }
     //EXIBIR O NÚMERO DE LINHAS AFETADAS DURANTE O UPDATE
     public function getUpdate()
     {
+        $this->log .= 'Números de linha afetadas durante o último <b>UPDATE: </b>'.$this->Atualizado.';<br>';
         return $this->Atualizado;
     }
     //RETORNA O NÚMERO DE LINHAS DELETADAS DO BANCO DE DADOS
     public function getDelete()
     {
+        $this->log .= 'Números de linha afetadas durante o último <b>DELETE: </b>'.$this->Removido.';<br>';
         return $this->Removido;
     }
     //RETORNA O LOG GERADO DURANTE A UTILIZAÇÃO DA INSTÂNCIA DA CLASS
@@ -151,6 +178,7 @@ class Crud
      * VALORES PELOS MÉTODOS ESPECIFICOS. */
     public function run()
     {
+        $this->log .= 'Iniciando conexão com o banco de dados;<br>';
         $this->pdo($this->DBHost, $this->DBName, $this->DBUser, $this->DBPass);
     }
     //INICIAR UMA CONEXÃO COM O BANCO DE DADOS
@@ -160,8 +188,9 @@ class Crud
             $pdo = new \PDO('mysql:host='.$host.'; dbname='.$dbname, $dbuser, $dbpass, array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             $this->conexao = $pdo;
-            $this->log .= '<br><b>Conexão com o banco de dados:</b><br>';
-            $this->log .= 'Inicializada | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
+            $this->log .= '<b>Conexão com o banco de dados {</b><br>';
+            $this->log .= 'Inicializada | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';';
+            $this->log .= '<b>}</b><br>';
         } catch (\PDOException $e) {
             die("Erro de conexão: " . $e->getMessage());
         }
@@ -228,13 +257,11 @@ class Crud
                 }
                 $query->execute();
             }
-            $this->log .= '<b>Inserindo dados:</b><br>';
-            $this->log .= 'Sucesso | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
+            $this->log .= 'Dados Inseridos | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
             $this->Inserido = $query->rowCount();
             return true;
         } catch (\Exception $e) {
-            $this->log .= '<b>Inserindo dados:</b><br>';
-            $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
+            $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
             return false;
         }
     }
@@ -289,13 +316,11 @@ class Crud
                 }
             }
             $query->execute();
-            $this->log .= '<b>Selecionando dados:</b><br>';
-            $this->log .= 'Sucesso | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
+            $this->log .= 'Dados Selecionados | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
             $this->Selecionado = $query->fetchAll(\PDO::FETCH_ASSOC);
             return true;
         } catch (\Exception $e) {
-            $this->log .= '<b>Selecionando dados:</b><br>';
-            $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
+            $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
             return false;
         }
     }
@@ -310,13 +335,11 @@ class Crud
             }
 
             $query->execute();
-            $this->log .= '<b>Selecionando dados:</b><br>';
-            $this->log .= 'Sucesso | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
+            $this->log .= 'Dados Selecionados | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
             $this->Selecionado = $query->fetchAll(\PDO::FETCH_ASSOC);
             return true;
         } catch (\Exception $e) {
-            $this->log .= '<b>Selecionando dados:</b><br>';
-            $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
+            $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
             return false;
         }
     }
@@ -359,13 +382,11 @@ class Crud
                 $query->bindvalue(':'.$key, $value);
             }
             $query->execute();
-            $this->log .= '<b>Inserindo dados:</b><br>';
-            $this->log .= 'Sucesso | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
+            $this->log .= 'Dados Atualizados | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
             $this->Atualizado = $query->rowCount();
             return true;
         } catch (\Exception $e) {
-            $this->log .= '<b>Atualizando dados:</b><br>';
-            $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
+            $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
             return false;
         }
     }
@@ -400,13 +421,11 @@ class Crud
             }
 
             $query->execute();
-            $this->log .= '<b>Inserindo dados:</b><br>';
-            $this->log .= 'Sucesso | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
+            $this->log .= 'Dados Removidos | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
             $this->Removido = $query->rowCount();
             return true;
         } catch (\Exception $e) {
-            $this->log .= '<b>Removendo dados:</b><br>';
-            $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
+            $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
             return false;
         }
     }
