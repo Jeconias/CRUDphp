@@ -3,13 +3,13 @@
  * @author     Jeconias Santos <jeconiass2009@hotmail.com>
  * @license    https://opensource.org/licenses/MIT - MIT License
  * @copyright  Jeconias Santos
- * @version    v1.0.4
+ * @version    v1.0.5
  *  Você pode utilizar essa class como quiser, contando que mantenha os créditos
  *  originais em todas as cópias!
  *
  *  Ainda irei finalizar os comentários!
  */
-namespace PlusCrud\Crud;
+//namespace PlusCrud\Crud;
 
 class Crud
 {
@@ -84,6 +84,12 @@ class Crud
         }
 
         $this->select($tabela, $valores, $where, $limit, $order);
+    }
+
+    //SELECIONAR REGISTROS COM SQL MONTADA
+    public function setSelectsql($sql, $valores)
+    {
+        $this->selectSql($sql, $valores);
     }
 
     //ATUALIZAR DADOS NO BANCO DE DADOS
@@ -164,68 +170,68 @@ class Crud
     private function inserir($tabela, $fields, $senha)
     {
         try {
-          if (array_sum(array_map('is_array', $fields)) != 0) {
-            //TOTAL DE CHAVES DE UMA ARRAY
-            $keys_count = count($fields[0]);
-            //NÚMERO DE ARRAYS VEZES O TOTAL DE CHAVES
-            $total_count = count($fields) * $keys_count;
-            //OS NOMES DAS CHAVES
-            $chaves = implode(', ', array_keys($fields[0]));
+            if (array_sum(array_map('is_array', $fields)) != 0) {
+                //TOTAL DE CHAVES DE UMA ARRAY
+                $keys_count = count($fields[0]);
+                //NÚMERO DE ARRAYS VEZES O TOTAL DE CHAVES
+                $total_count = count($fields) * $keys_count;
+                //OS NOMES DAS CHAVES
+                $chaves = implode(', ', array_keys($fields[0]));
 
-            //ESSE WHILE GERA O SQL DE ACORDO COM $total_count, OU SEJA, SE O $total_count FOR IGUAL A 10
-            // O WHILE VAI GERAR ALGO ASSIM: (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)
-            $i = 1;
-            $controle = 1;
-            $SQL_Generator = '(?';
-            while ($i < $total_count) {
-                if (($controle * $keys_count) == $i) {
-                    $SQL_Generator .= '), (';
-                    $SQL_Generator .= '?';
-                    $controle++;
-                } else {
-                    $SQL_Generator .= ', ?';
+                //ESSE WHILE GERA O SQL DE ACORDO COM $total_count, OU SEJA, SE O $total_count FOR IGUAL A 10
+                // O WHILE VAI GERAR ALGO ASSIM: (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)
+                $i = 1;
+                $controle = 1;
+                $SQL_Generator = '(?';
+                while ($i < $total_count) {
+                    if (($controle * $keys_count) == $i) {
+                        $SQL_Generator .= '), (';
+                        $SQL_Generator .= '?';
+                        $controle++;
+                    } else {
+                        $SQL_Generator .= ', ?';
+                    }
+                    $i++;
                 }
-                $i++;
-            }
-            $SQL_Generator .= ')';
-            $SQL = 'INSERT INTO '.$tabela.' ('.$chaves.') VALUES '.$SQL_Generator;
-            $query = $this->conexao->prepare($SQL);
+                $SQL_Generator .= ')';
+                $SQL = 'INSERT INTO '.$tabela.' ('.$chaves.') VALUES '.$SQL_Generator;
+                $query = $this->conexao->prepare($SQL);
 
-            $count = 1;
-            array_walk_recursive($fields, function($value, $key) use (&$count, &$query, &$senha){
-              if ($key == $senha) {
-                  $query->bindvalue($count, $this->hash($value));
-              } else {
-                  $query->bindValue($count, $value);
-              }
-              $count++;
-            });
-            $query->execute();
-          }else {
-            foreach ($fields as $key => $value) {
-                $first_keys [] = ':'.$key;
-            }
-
-            $keys = implode(', ', array_keys($fields));
-            $values = implode(', ', array_values($first_keys));
-
-            $sql = 'INSERT INTO '.$tabela.' ('.$keys.') VALUES ('.$values.')';
-
-            $query = $this->conexao->prepare($sql);
-
-            foreach ($fields as $key => $value) {
-                if ($key == $senha) {
-                    $query->bindvalue(':'.$key, $this->hash($value));
-                } else {
-                    $query->bindvalue(':'.$key, $value);
+                $count = 1;
+                array_walk_recursive($fields, function ($value, $key) use (&$count, &$query, &$senha) {
+                    if ($key == $senha) {
+                        $query->bindvalue($count, $this->hash($value));
+                    } else {
+                        $query->bindValue($count, $value);
+                    }
+                    $count++;
+                });
+                $query->execute();
+            } else {
+                foreach ($fields as $key => $value) {
+                    $first_keys [] = ':'.$key;
                 }
+
+                $keys = implode(', ', array_keys($fields));
+                $values = implode(', ', array_values($first_keys));
+
+                $sql = 'INSERT INTO '.$tabela.' ('.$keys.') VALUES ('.$values.')';
+
+                $query = $this->conexao->prepare($sql);
+
+                foreach ($fields as $key => $value) {
+                    if ($key == $senha) {
+                        $query->bindvalue(':'.$key, $this->hash($value));
+                    } else {
+                        $query->bindvalue(':'.$key, $value);
+                    }
+                }
+                $query->execute();
             }
-            $query->execute();
-          }
-          $this->log .= '<b>Inserindo dados:</b><br>';
-          $this->log .= 'Sucesso | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
-          $this->Inserido = $query->rowCount();
-          return true;
+            $this->log .= '<b>Inserindo dados:</b><br>';
+            $this->log .= 'Sucesso | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
+            $this->Inserido = $query->rowCount();
+            return true;
         } catch (\Exception $e) {
             $this->log .= '<b>Inserindo dados:</b><br>';
             $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
@@ -293,6 +299,28 @@ class Crud
             return false;
         }
     }
+
+    //SELECIONAR REGISTROS COM SQL MONTADA
+    private function selectSql($sql, $valores)
+    {
+        try {
+            $query = $this->conexao->prepare($sql);
+            foreach ($valores as $key => $value) {
+                $query->bindvalue(':'.$key, $value);
+            }
+
+            $query->execute();
+            $this->log .= '<b>Selecionando dados:</b><br>';
+            $this->log .= 'Sucesso | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
+            $this->Selecionado = $query->fetchAll(\PDO::FETCH_ASSOC);
+            return true;
+        } catch (\Exception $e) {
+            $this->log .= '<b>Selecionando dados:</b><br>';
+            $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').'<br>';
+            return false;
+        }
+    }
+
     //ATUALIZAR REGISTROS
     private function update($tabela, $valores, $where, $senha)
     {

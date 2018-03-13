@@ -91,7 +91,13 @@ Se você deseja saber quantas linhas foram inseridas, use `$crud->getInserir`.
 - Quarto parâmetro: Utilize um valor inteiro para definir o limite de registros selecionados;
 - Quinto parâmetro: Uma array para classificar o conjunto de resultados em ordem ascendente ou decrescente. Use **DESC** ou **ASC**.
 
-Você deve utilizar `$crud->getSelect()` para obter os últimos valores retornados pelo método `$crud->setSelect`.
+#### Monte sua SQL
+
+Se a Classe não suporta (ainda e.e) sua SQL, você pode montar uma para não abandonar ou ter que usar duas classes para CRUD.
+
+    $crud->setSelectsql('SELECT * FROM registrodehoras WHERE data BETWEEN :inicio AND :fim', array('inicio' => '2018-02-01', 'fim' => '2018-03-05'));
+
+Você deve utilizar `$crud->getSelect()` para obter os últimos valores retornados pelo método `$crud->setSelect` ou `$crud->setSelectsql`
 
 ### Atualizando registros
 
@@ -130,6 +136,9 @@ Correção do método hash.
 
 - 1.0.4
 Suporte para múltiplos "inserts"
+
+- 1.0.5
+Suporte para SQL montada
 
 ## Sobre
 - Autor: Jeconias Santos
