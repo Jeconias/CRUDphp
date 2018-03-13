@@ -9,7 +9,7 @@
  *
  *  Ainda irei finalizar os comentários!
  */
-//namespace PlusCrud\Crud;
+namespace PlusCrud\Crud;
 
 class Crud
 {
