@@ -3,7 +3,7 @@
  * @author     Jeconias Santos <jeconiass2009@hotmail.com>
  * @license    https://opensource.org/licenses/MIT - MIT License
  * @copyright  Jeconias Santos
- * @version    v1.0.6
+ * @version    v1.0.7
  *  Você pode utilizar essa class como quiser, contando que mantenha os créditos
  *  originais em todas as cópias!
  *
@@ -61,7 +61,7 @@ class Crud
     //INSERIR REGISTROS NO BANCO DE DADOS
     public function setInserir($tabela, $valores, $senha = 'senha')
     {
-        if (!is_array($valores)) {
+        if (!is_array($valores) || array_sum(array_map('is_array', $valores)) == 0) {
             $this->log .= 'Erro: A variável <b>$valores</b> do método <b>setInserir</b> não é uma array;<br>';
             $this->Inserido = false;
             return false;
@@ -153,8 +153,11 @@ class Crud
     }
     //RECEBER OS VALORES RETORNADOS DO BANCO DE DADOS
     public function getSelect()
-    {
-        $this->log .= 'Números de dados selecionados durante o último <b>SELECT: </b>'.count($this->Selecionado).';<br>';
+    {   $count = null;
+        if ($this->Selecionado != null) {
+          $count = count($this->Selecionado);
+        }
+        $this->log .= 'Números de dados selecionados durante o último <b>SELECT: </b>'.$count.';<br>';
         return $this->Selecionado;
     }
     //EXIBIR O NÚMERO DE LINHAS AFETADAS DURANTE O UPDATE
