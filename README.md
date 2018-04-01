@@ -150,8 +150,11 @@ Suporte para SQL montada.
 Comentários e pequenas correções;
 Melhorado o sistema de logs.
 
+- 1.0.7
+
+Correção para múltiplos inserts.
+
 ## Sobre
-- Autor: Jeconias Santos
 - Licença: [MIT License](https://opensource.org/licenses/MIT)
 - Copyright: Jeconias Santos
 - Status: Desenvolvimento
