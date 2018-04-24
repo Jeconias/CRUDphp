@@ -3,7 +3,7 @@
  * @author     Jeconias Santos <jeconiass2009@hotmail.com>
  * @license    https://opensource.org/licenses/MIT - MIT License
  * @copyright  Jeconias Santos
- * @version    v1.0.7
+ * @version    v1.0.8
  *  Você pode utilizar essa class como quiser, contando que mantenha os créditos
  *  originais em todas as cópias!
  *
@@ -88,6 +88,8 @@ class Crud
             $this->log .= 'Erro: A variável <b>$order</b> do método <b>setSelect</b> não é uma array;<br>';
             $this->Selecionado = false;
             return false;
+        }elseif ($where != null && !isset($where['joker'])) {
+          $this->log .= 'Warning: Os Jokers não foram inseridos para a utilização do WHERE. Usando o padrão: "=";<br>';
         }
 
         if ($this->conexao == null) {
@@ -99,7 +101,7 @@ class Crud
     }
 
     //SELECIONAR REGISTROS COM SQL MONTADA
-    public function setSelectsql($sql, $valores)
+    public function setSelectsql($sql, $valores = null)
     {
         if ($this->conexao == null) {
           $this->log .= 'Erro: Conexão com o banco de dados não estabelecida;<br>';
@@ -276,15 +278,17 @@ class Crud
                 $arr_where = $where;
                 $count = count($where);
                 $where = array_keys($where);
-                $where_sql = 'WHERE '.$where[0].'=:'.$where[0];
+                $joker = isset($arr_where['joker'][0])?$arr_where['joker'][0]:'=';
+                $where_sql = 'WHERE '.$where[0].$joker.':'.$where[0];
 
                 $a = 1;
                 while ($a < $count) {
                     if (!ctype_alpha($where[$a])) {
                         return false;
                     }
-                    if (count($where) > 1) {
-                        $where_sql .= ' AND '.$where[$a].'=:'.$where[$a];
+                    if ($count > 1 && $where[$a] != 'joker') {
+                        $joker = isset($arr_where['joker'][$a])?$arr_where['joker'][$a]:'=';
+                        $where_sql .= ' AND '.$where[$a].$joker.':'.$where[$a];
                     }
                     $a++;
                 }
@@ -314,6 +318,9 @@ class Crud
             $query = $this->conexao->prepare($sql);
 
             if ($where != null) {
+                if (isset($arr_where['joker'])){
+                  unset($arr_where['joker']);
+                }
                 foreach ($arr_where as $key => $value) {
                     $query->bindValue(':'.$key, $value);
                 }
@@ -332,11 +339,11 @@ class Crud
     private function selectSql($sql, $valores)
     {
         try {
-            $query = $this->conexao->prepare($sql);
-            foreach ($valores as $key => $value) {
-                $query->bindvalue(':'.$key, $value);
+            if ($valores != null) {
+              foreach ($valores as $key => $value) {
+                  $query->bindvalue(':'.$key, $value);
+              }
             }
-
             $query->execute();
             $this->log .= 'Dados Selecionados | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
             $this->Selecionado = $query->fetchAll(\PDO::FETCH_ASSOC);
