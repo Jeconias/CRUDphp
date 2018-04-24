@@ -92,10 +92,17 @@ Se você deseja saber quantas linhas foram inseridas, use `$crud->getInserir`.
     ###### Versão >= 1.0.8
 
     - Nas versões acima de 1.0.8 você pode definir o tipo de condição para cada valor.
-    EX: `array('versao' => '2.2', 'joker' => array('>'))`
+
+    EX:
+    `array('versao' => '2.2', 'joker' => array('>'))`
+
     Você pode inserir mais "Jokers":
-    EX 2: `array('versao' => '2.2' 'tipo' => 'stable', 'joker' => array('>', '='))`
+
+    EX 2:
+    `array('versao' => '2.2' 'tipo' => 'stable', 'joker' => array('>', '='))`
+
     *PS.:*
+    
         - Mantenha a sequência das condições iguais as das seleções;
         - Sempre utiliza o nome "joker" para setar as condições;
         - O valor padrão para WHERE é "=" se você não utilizar o joker.
