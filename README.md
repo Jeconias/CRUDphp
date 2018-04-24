@@ -88,6 +88,18 @@ Se você deseja saber quantas linhas foram inseridas, use `$crud->getInserir`.
 - Primeiro parâmetro: Nome da tabela;
 - Segundo parâmetro: Uma array com os valores que deseja receber. Use `array(*)` para tudo;
 - Terceiro parâmetro: Uma array que faz papel de **where**, ou seja, no exemplo a cima eu irei receber todos os registros que tenha o email correspondente. Você pode utilizar mais de um valor, ex: `array('nome' => Jeconias, 'Cidade' => 'Natal')`;
+
+    ###### Versão >= 1.0.8
+
+    - Nas versões acima de 1.0.8 você pode definir o tipo de condição para cada valor.
+    EX: `array('versao' => '2.2', 'joker' => array('>'))`
+    Você pode inserir mais "Jokers":
+    EX 2: `array('versao' => '2.2' 'tipo' => 'stable', 'joker' => array('>', '='))`
+    *PS.:*
+        - Mantenha a sequência das condições iguais as das seleções;
+        - Sempre utiliza o nome "joker" para setar as condições;
+        - O valor padrão para WHERE é "=" se você não utilizar o joker.
+
 - Quarto parâmetro: Utilize um valor inteiro para definir o limite de registros selecionados;
 - Quinto parâmetro: Uma array para classificar o conjunto de resultados em ordem ascendente ou decrescente. Use **DESC** ou **ASC**.
 
@@ -153,6 +165,12 @@ Melhorado o sistema de logs.
 - 1.0.7
 
 Correção para múltiplos inserts.
+
+- 1.0.8
+
+Agora é possível utilizar WHERE com outras condições (>, <>, <, etc...);
+Corrigido o problema para inserir arrays multidimensional
+
 
 ## Sobre
 - Licença: [MIT License](https://opensource.org/licenses/MIT)
