@@ -198,6 +198,7 @@ Suporte para SQL montada.
 - 1.0.6
 
 Comentários e pequenas correções;
+
 Melhorado o sistema de logs.
 
 - 1.0.7
@@ -212,8 +213,11 @@ Corrigido o problema para inserir arrays multidimensional
 - 1.0.9
 
 Correção ao inserir várias linhas com arrays;
+
 Suporte para receber traduções para os logs;
+
 Alterado os nomes dos metodos para melhorar o uso;
+
 A versão 1.0.9 **NÃO** é compatível com as anteriores.
 
 
