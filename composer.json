@@ -1,10 +1,15 @@
 {
   "name": "pluscrud/crud",
   "type": "library",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Um CRUD para otimizar suas consultas.",
   "homepage": "https://github.com/jeconiassantos/crud",
   "license": "MIT",
+  "support": {
+    "email": "jeconiass2009@hotmail.com",
+    "issues": "jeconiass2009@hotmail.com",
+    "docs": "https://github.com/jeconiassantos/crud"
+  },
   "authors": [
     {
       "name": "Jeconias Santos",
@@ -12,7 +17,8 @@
     }
   ],
   "require": {
-    "php": ">=5.4.0"
+    "php": ">=5.4.0",
+    "ext-pdo": "*"
   },
   "autoload":{
     "psr-4":{
