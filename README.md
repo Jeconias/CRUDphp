@@ -225,6 +225,10 @@ A versão 1.0.9 **NÃO** é compatível com as anteriores.
 
 Organização estrutural
 
+- 1.1.1
+
+Correção do composer.json
+
 
 ## Sobre
 - Licença: [MIT License](https://opensource.org/licenses/MIT)

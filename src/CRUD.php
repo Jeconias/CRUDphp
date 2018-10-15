@@ -3,7 +3,7 @@
  * @author     Jeconias Santos <jeconiass2009@hotmail.com>
  * @license    https://opensource.org/licenses/MIT - MIT License
  * @copyright  Jeconias Santos
- * @version    v1.1.0
+ * @version    v1.1.1
  *  Você pode utilizar essa class como quiser, contando que mantenha os créditos
  *  originais em todas as cópias!
  *
