@@ -3,11 +3,12 @@
  * @author     Jeconias Santos <jeconiass2009@hotmail.com>
  * @license    https://opensource.org/licenses/MIT - MIT License
  * @copyright  Jeconias Santos
- * @version    v1.0.8
+ * @version    v1.0.9
  *  Você pode utilizar essa class como quiser, contando que mantenha os créditos
  *  originais em todas as cópias!
  *
  *  Ainda irei finalizar os comentários!
+ *  A tradução ainda não está completa
  */
 namespace PlusCrud\Crud;
 
@@ -20,10 +21,7 @@ class Crud
     private $DBPass      = null; // SENHA DO BANCO DE DADOS
     private $log         = null; // LOG PARA VISUALIZAR QUANDO FOR NECESSÁRIO
 
-    private $Inserido    = null; // QUANTIDADE DE REGISTROS INSERIDOS NA ÚLTIMA QUERY
-    private $Selecionado = null; // DADOS SELECIONADOS DA ÚLTIMA QUERY
-    private $Atualizado  = null; // QUANTIDADE DE REGISTROS ATUALIZADOS NA ÚLTIMA QUERY
-    private $Removido    = null; // QUANTIDADE DE REGISTROS DELETADOS NA ÚLTIMA QUERY
+    private $language    = null; // IDIOMA ATUAL
 
     public function __construct($conexao = null, $config = null)
     {
@@ -32,160 +30,163 @@ class Crud
         } elseif ($conexao == null && $config !== null) {
             $this->pdo($config[0], $config[1], $config[2], $config[3]);
         }
+        $this->init();
     }
+
+    private function init()
+    {
+      $this->language = array(
+        'default' => 'pt_br',
+        'translation' => array(
+          'action_change_language' => 'Idioma alterado para',
+          'action_dbhost' => 'Adicionado endereço do servidor do banco de dados;',
+          'action_dbname' => 'Adicionado nome do banco de dados;',
+          'action_dbuser' => 'Adicionado usuário do banco de dados;',
+          'action_dbpass' => 'Adicionado senha do banco de dados;',
+          'action_startdb' => 'Iniciando conexão com o banco de dados;',
+          'action_connectiondb' => 'Conexão com o banco de dados',
+          'action_connectiondb_init' => 'Inicializada',
+          'warning_jokers' => 'Warning: Os Jokers não foram inseridos para a utilização do WHERE. Usando o padrão: "=";',
+          'error_connection' => 'Erro: Conexão com o banco de dados não estabelecida;',
+          'error_change_language' => 'Falha ao tentar alterar o idioma;',
+        )
+      );
+    }
+
     //ENDEREÇO DO SERVIDOR
     public function setDBHost($v)
     {
         $this->DBHost = $v;
-        $this->log .= 'Adicionado endereço do servidor do banco de dados;<br>';
+        $this->log .= $this->language['translation']['action_dbhost'].'<br>';
     }
     //NOME DO BANCO DE DADOS
     public function setDBName($v)
     {
         $this->DBName = $v;
-        $this->log .= 'Adicionado nome do banco de dados;<br>';
+        $this->log .= $this->language['translation']['action_dbname'].'<br>';
     }
     //NOME DO USUÁRIO DO BANCO DE DADOS
     public function setDBUser($v)
     {
         $this->DBUser = $v;
-        $this->log .= 'Adicionado usuário do banco de dados;<br>';
+        $this->log .= $this->language['translation']['action_dbuser'].'<br>';
     }
     //SENHA DO BANCO DE DADOS
     public function setDBPass($v)
     {
         $this->DBPass = $v;
-        $this->log .= 'Adicionado senha do banco de dados;<br>';
+        $this->log .= $this->language['translation']['action_dbpass'].'<br>';
+    }
+
+    public function setLanguage($lang, $directory)
+    {
+      return $this->changeLanguage($lang, $directory);
     }
 
     //INSERIR REGISTROS NO BANCO DE DADOS
-    public function setInserir($tabela, $valores, $senha = 'senha')
+    public function insert($tabela, array $valores, $senha = 'senha')
     {
-        if (!is_array($valores) || array_sum(array_map('is_array', $valores)) == 0) {
-            $this->log .= 'Erro: A variável <b>$valores</b> do método <b>setInserir</b> não é uma array;<br>';
+        if (!is_array($valores)) {
+            $this->log .= 'Erro: A variável <b>$valores</b> do método <b>'.__FUNCTION__.'</b> não é uma array;<br>';
             $this->Inserido = false;
             return false;
         }
         if ($this->conexao == null) {
-          $this->log .= 'Erro: Conexão com o banco de dados não estabelecida;<br>';
+          $this->log .= $this->language['translation']['error_connection'].'<br>';
           return false;
         }
-        $this->inserir($tabela, $valores, $senha);
+        return $this->actionInsert($tabela, $valores, $senha);
     }
 
     //CAPTURAR DADOS DO BANCO DE DADOS
-    public function setSelect($tabela, $valores, $where = null, $limit = null, $order = null)
+    public function select($tabela, $valores, $where = null, $limit = null, $order = null)
     {
         if (!is_array($valores)) {
-            $this->log .= 'Erro: A variável <b>$valores</b> do método <b>setSelect</b> não é uma array;<br>';
+            $this->log .= 'Erro: A variável <b>$valores</b> do método <b>'.__FUNCTION__.'</b> não é uma array;<br>';
             $this->Selecionado = false;
             return false;
-        } elseif ($where !== null && !is_array($where)) {
-            $this->log .= 'Erro: A variável <b>$where</b> do método <b>setSelect</b> não é uma array;<br>';
+        }elseif ($where != null && !is_array($where)) {
+            $this->log .= 'Erro: A variável <b>$where</b> do método <b>'.__FUNCTION__.'</b> não é uma array;<br>';
             $this->Selecionado = false;
             return false;
-        } elseif ($order !== null && !is_array($order)) {
-            $this->log .= 'Erro: A variável <b>$order</b> do método <b>setSelect</b> não é uma array;<br>';
+        }elseif ($order != null && !is_array($order)) {
+            $this->log .= 'Erro: A variável <b>$order</b> do método <b>'.__FUNCTION__.'</b> não é uma array;<br>';
             $this->Selecionado = false;
             return false;
         }elseif ($where != null && !isset($where['joker'])) {
-          $this->log .= 'Warning: Os Jokers não foram inseridos para a utilização do WHERE. Usando o padrão: "=";<br>';
+          $this->log .= $this->language['translation']['warning_jokers'].'<br>';
         }
 
         if ($this->conexao == null) {
-          $this->log .= 'Erro: Conexão com o banco de dados não estabelecida;<br>';
+          $this->log .= $this->language['translation']['error_connection'].'<br>';
           return false;
         }
 
-        $this->select($tabela, $valores, $where, $limit, $order);
+        return $this->actionSelect($tabela, $valores, $where, $limit, $order);
     }
 
     //SELECIONAR REGISTROS COM SQL MONTADA
-    public function setSelectsql($sql, $valores = null)
+    public function selectManual($sql, $valores = null)
     {
         if ($this->conexao == null) {
-          $this->log .= 'Erro: Conexão com o banco de dados não estabelecida;<br>';
+          $this->log .= $this->language['translation']['error_connection'].'<br>';
           return false;
         }
-        $this->selectSql($sql, $valores);
+        return $this->selectSql($sql, $valores);
     }
 
     //ATUALIZAR DADOS NO BANCO DE DADOS
-    public function setUpdate($tabela, $valores, $where, $senha = 'senha')
+    public function update($tabela, $valores, $where, $senha = 'senha')
     {
         if (!is_array($valores)) {
-            $this->log .= 'Erro: A variável <b>$valores</b> do método <b>setUpdate</b> não é uma array;<br>';
+            $this->log .= 'Erro: A variável <b>$valores</b> do método <b>'.__FUNCTION__.'</b> não é uma array;<br>';
             $this->Atualizado = false;
             return false;
         } elseif ($where !== null && !is_array($where)) {
-            $this->log .= 'Erro: A variável <b>$where</b> do método <b>setUpdate</b> não é uma array;<br>';
+            $this->log .= 'Erro: A variável <b>$where</b> do método <b>'.__FUNCTION__.'</b> não é uma array;<br>';
             $this->Atualizado = false;
             return false;
         }
 
         if ($this->conexao == null) {
-          $this->log .= 'Erro: Conexão com o banco de dados não estabelecida;<br>';
+          $this->log .= $this->language['translation']['error_connection'].'<br>';
           return false;
         }
 
-        $this->update($tabela, $valores, $where, $senha);
+        return $this->actionUpdate($tabela, $valores, $where, $senha);
     }
 
     //REMOVER REGISTROS DO BANCO DE DADOS
-    public function setDelete($tabela, $where = null)
+    public function delete($tabela, $where = null)
     {
         if ($where !== null && !is_array($where)) {
-            $this->log .= 'Erro: A variável <b>$where</b> do método <b>setDelete</b> não é uma array;<br>';
+            $this->log .= 'Erro: A variável <b>$where</b> do método <b>'.__FUNCTION__.'</b> não é uma array;<br>';
             $this->Removido = false;
             return false;
         }
 
         if ($this->conexao == null) {
-          $this->log .= 'Erro: Conexão com o banco de dados não estabelecida;<br>';
+          $this->log .= $this->language['translation']['error_connection'].'<br>';
           return false;
         }
 
-        $this->Delete($tabela, $where);
+        return $this->actionDelete($tabela, $where);
     }
-    //RECEBER O NÚMEROS DE LINHAS INSERIDAS
-    public function getInserir()
-    {
-        $this->log .= 'Números de linha inseridas durante o último <b>INSERT: </b>'.$this->Inserido.';<br>';
-        return $this->Inserido;
-    }
-    //RECEBER OS VALORES RETORNADOS DO BANCO DE DADOS
-    public function getSelect()
-    {   $count = null;
-        if ($this->Selecionado != null) {
-          $count = count($this->Selecionado);
-        }
-        $this->log .= 'Números de dados selecionados durante o último <b>SELECT: </b>'.$count.';<br>';
-        return $this->Selecionado;
-    }
-    //EXIBIR O NÚMERO DE LINHAS AFETADAS DURANTE O UPDATE
-    public function getUpdate()
-    {
-        $this->log .= 'Números de linha afetadas durante o último <b>UPDATE: </b>'.$this->Atualizado.';<br>';
-        return $this->Atualizado;
-    }
-    //RETORNA O NÚMERO DE LINHAS DELETADAS DO BANCO DE DADOS
-    public function getDelete()
-    {
-        $this->log .= 'Números de linha afetadas durante o último <b>DELETE: </b>'.$this->Removido.';<br>';
-        return $this->Removido;
-    }
+
     //RETORNA O LOG GERADO DURANTE A UTILIZAÇÃO DA INSTÂNCIA DA CLASS
-    public function getLog()
+    public function log()
     {
         return $this->log;
     }
+
     /*INICIA UMA CONEXÃO COM O BANCO DE DADOS QUANDO O USUÁRIO PASSA OS
      * VALORES PELOS MÉTODOS ESPECIFICOS. */
     public function run()
     {
-        $this->log .= 'Iniciando conexão com o banco de dados;<br>';
+        $this->log .= $this->language['translation']['action_startdb'].'<br>';
         $this->pdo($this->DBHost, $this->DBName, $this->DBUser, $this->DBPass);
     }
+
     //INICIAR UMA CONEXÃO COM O BANCO DE DADOS
     private function pdo($host, $dbname, $dbuser, $dbpass)
     {
@@ -193,15 +194,15 @@ class Crud
             $pdo = new \PDO('mysql:host='.$host.'; dbname='.$dbname, $dbuser, $dbpass, array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
             $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             $this->conexao = $pdo;
-            $this->log .= '<b>Conexão com o banco de dados {</b><br>';
-            $this->log .= 'Inicializada | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';';
+            $this->log .= '<b>'.$this->language['translation']['action_connectiondb'].' { </b><br>';
+            $this->log .= $this->language['translation']['action_connectiondb_init'] . ' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';';
             $this->log .= '<b>}</b><br>';
         } catch (\PDOException $e) {
             die("Erro de conexão: " . $e->getMessage());
         }
     }
     //INSERIR OS DADOS
-    private function inserir($tabela, $fields, $senha)
+    private function actionInsert($tabela, $fields, $senha)
     {
         try {
             if (array_sum(array_map('is_array', $fields)) != 0) {
@@ -270,8 +271,9 @@ class Crud
             return false;
         }
     }
+
     //SELECIONAR REGISTROS
-    private function select($tabela, $valores, $where, $limit, $orderBy)
+    private function actionSelect($tabela, $valores, $where, $limit, $orderBy)
     {
         try {
             if ($where != null) {
@@ -327,8 +329,7 @@ class Crud
             }
             $query->execute();
             $this->log .= 'Dados Selecionados | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
-            $this->Selecionado = $query->fetchAll(\PDO::FETCH_ASSOC);
-            return true;
+            return $query->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\Exception $e) {
             $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
             return false;
@@ -346,8 +347,7 @@ class Crud
             }
             $query->execute();
             $this->log .= 'Dados Selecionados | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
-            $this->Selecionado = $query->fetchAll(\PDO::FETCH_ASSOC);
-            return true;
+            return $query->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\Exception $e) {
             $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
             return false;
@@ -355,7 +355,7 @@ class Crud
     }
 
     //ATUALIZAR REGISTROS
-    private function update($tabela, $valores, $where, $senha)
+    private function actionUpdate($tabela, $valores, $where, $senha)
     {
         try {
             $key = array_keys($valores);
@@ -393,15 +393,14 @@ class Crud
             }
             $query->execute();
             $this->log .= 'Dados Atualizados | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
-            $this->Atualizado = $query->rowCount();
-            return true;
+            return $query->rowCount();
         } catch (\Exception $e) {
             $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
             return false;
         }
     }
     //REMOVER REGISTROS
-    private function Delete($tabela, $where)
+    private function actionDelete($tabela, $where)
     {
         try {
             if ($where != null) {
@@ -432,12 +431,40 @@ class Crud
 
             $query->execute();
             $this->log .= 'Dados Removidos | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
-            $this->Removido = $query->rowCount();
-            return true;
+            return $query->rowCount();
         } catch (\Exception $e) {
             $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
             return false;
         }
+    }
+
+    private function changeLanguage($lang, $directory)
+    {
+      $file = $directory . '/class.pluscrud.lang.'.$lang.'.php';
+
+      if(file_exists($file) && $this->language['default'] != $lang){
+        include $file;
+
+        if(isset($newTranslate)){
+            $this->language['translation'] = array();
+            $this->language['translation'] = array_merge($this->language['translation'], $newTranslate);
+
+            if($this->language['translation'] != null){
+              $this->language['default'] = $lang;
+              $this->log .= $this->language['translation']['action_change_language'].' <b>'.$lang.'</b>; <br>';
+              return true;
+            }
+            $this->init();
+            $this->log .= $this->language['translation']['error_change_language'].'<br>';
+            return false;
+        }else{
+          $this->log .= 'A variável <b>$newTranslate</b> não foi definida no arquivo de tradução; <br>';
+          return false;
+        }
+      }else{
+        $this->log .= 'O arquivo de tradução não existe: <b>'.$file.'</b>; <br>';
+        return false;
+      }
     }
 
     //CRIPTOGRAFIA DE SENHA POR HASH
