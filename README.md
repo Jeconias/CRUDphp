@@ -208,6 +208,7 @@ Correção para múltiplos inserts.
 - 1.0.8
 
 Agora é possível utilizar WHERE com outras condições (>, <>, <, etc...);
+
 Corrigido o problema para inserir arrays multidimensional
 
 - 1.0.9
@@ -219,6 +220,10 @@ Suporte para receber traduções para os logs;
 Alterado os nomes dos metodos para melhorar o uso;
 
 A versão 1.0.9 **NÃO** é compatível com as anteriores.
+
+- 1.1.0
+
+Organização estrutural
 
 
 ## Sobre
