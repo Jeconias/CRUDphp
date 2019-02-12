@@ -171,6 +171,7 @@ Use `$crud->log()` para receber as ações e erros gerados.
 |selectManual() | Selecionar dados com SQL manual | Os dados selecionados |
 |update() | Atualizar dados | Quantidade de linhas alteradas |
 |delete() | Remover linhas | A quantida de linhas afetadas |
+|connStatus() | Verifica se a conexão com o banco de dados existe | boolean |
 |log() | nothing | Todo o log do objeto |
 
 ## Changelog
@@ -228,6 +229,10 @@ Organização estrutural
 - 1.1.1
 
 Correção do composer.json
+
+- 1.1.2
+
+- Adiconado método para verificação de conexão com o banco de dados.
 
 
 ## Sobre

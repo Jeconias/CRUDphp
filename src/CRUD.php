@@ -3,7 +3,7 @@
  * @author     Jeconias Santos <jeconiass2009@hotmail.com>
  * @license    https://opensource.org/licenses/MIT - MIT License
  * @copyright  Jeconias Santos
- * @version    v1.1.1
+ * @version    v1.1.2
  *  Você pode utilizar essa class como quiser, contando que mantenha os créditos
  *  originais em todas as cópias!
  *
@@ -91,6 +91,7 @@ class Crud
             $this->Inserido = false;
             return false;
         }
+        
         if ($this->conexao == null) {
           $this->log .= $this->language['translation']['error_connection'].'<br>';
           return false;
@@ -174,7 +175,7 @@ class Crud
     }
 
     //RETORNA O LOG GERADO DURANTE A UTILIZAÇÃO DA INSTÂNCIA DA CLASS
-    public function log()
+    public function log():string
     {
         return $this->log;
     }
@@ -187,6 +188,13 @@ class Crud
         $this->pdo($this->DBHost, $this->DBName, $this->DBUser, $this->DBPass);
     }
 
+    /* VERIFICAR SE A CONEXÃO COM O BANCO DE DADOS EXISTE */
+    public function connStatus():bool
+    {
+        if($this->conexao instanceof PDO) return true;
+        return false;
+    }
+
     //INICIAR UMA CONEXÃO COM O BANCO DE DADOS
     private function pdo($host, $dbname, $dbuser, $dbpass)
     {
@@ -197,8 +205,12 @@ class Crud
             $this->log .= '<b>'.$this->language['translation']['action_connectiondb'].' { </b><br>';
             $this->log .= $this->language['translation']['action_connectiondb_init'] . ' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';';
             $this->log .= '<b>}</b><br>';
+            return true;
         } catch (\PDOException $e) {
-            die("Erro de conexão: " . $e->getMessage());
+            $trace = $e->getTrace()[0];
+            $this->log = '<b>Error:</b> ' . $e->getMessage() . '<br><b>File:</b> ' . $trace['file'] . '<br> <b>Line:</b> ' . $trace['line'];
+            $this->conexao = null;
+            return false;
         }
     }
     //INSERIR OS DADOS
