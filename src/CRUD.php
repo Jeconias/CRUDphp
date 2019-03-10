@@ -3,7 +3,7 @@
  * @author     Jeconias Santos <jeconiass2009@hotmail.com>
  * @license    https://opensource.org/licenses/MIT - MIT License
  * @copyright  Jeconias Santos
- * @version    v1.1.2
+ * @version    v1.1.3
  *  Você pode utilizar essa class como quiser, contando que mantenha os créditos
  *  originais em todas as cópias!
  *
@@ -352,6 +352,9 @@ class Crud
     private function selectSql($sql, $valores)
     {
         try {
+
+            $query = $this->conexao->prepare($sql);
+
             if ($valores != null) {
               foreach ($valores as $key => $value) {
                   $query->bindvalue(':'.$key, $value);

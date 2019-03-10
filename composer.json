@@ -1,14 +1,14 @@
 {
   "name": "pluscrud/crud",
   "type": "library",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Um CRUD para otimizar suas consultas.",
-  "homepage": "https://github.com/jeconiassantos/crud",
+  "homepage": "https://github.com/jeconiassantos/CRUDphp",
   "license": "MIT",
   "support": {
     "email": "jeconiass2009@hotmail.com",
     "issue": "jeconiass2009@hotmail.com",
-    "docs": "https://github.com/jeconiassantos/crud"
+    "docs": "https://github.com/jeconiassantos/CRUDphp"
   },
   "authors": [
     {

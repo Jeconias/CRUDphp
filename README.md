@@ -234,6 +234,10 @@ Correção do composer.json
 
 - Adiconado método para verificação de conexão com o banco de dados.
 
+- 1.1.3
+
+- Correção para o método **selectManual**
+
 
 ## Sobre
 - Licença: [MIT License](https://opensource.org/licenses/MIT)
