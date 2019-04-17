@@ -3,7 +3,7 @@
  * @author     Jeconias Santos <jeconiass2009@hotmail.com>
  * @license    https://opensource.org/licenses/MIT - MIT License
  * @copyright  Jeconias Santos
- * @version    v1.1.3
+ * @version    v1.1.4
  *  Você pode utilizar essa class como quiser, contando que mantenha os créditos
  *  originais em todas as cópias!
  *
@@ -14,6 +14,8 @@ namespace PlusCrud\Crud;
 
 class Crud
 {
+    private static $instance = null;
+
     private $conexao     = null; // CONEXÃO DO BANCO DE DADOS
     private $DBHost      = null; // HOST PARA CONEXÃO DO BANCO DE DADOS
     private $DBName      = null; // NOME DO BANCO DE DADOS
@@ -23,7 +25,7 @@ class Crud
 
     private $language    = null; // IDIOMA ATUAL
 
-    public function __construct($conexao = null, $config = null)
+    private function __construct($conexao, $config)
     {
         if ($conexao !== null && $config == null) {
             $this->conexao = $conexao;
@@ -51,6 +53,12 @@ class Crud
           'error_change_language' => 'Falha ao tentar alterar o idioma;',
         )
       );
+    }
+
+    public static function getInstance($conexao = null, $config = null)
+    {
+        if(self::$instance === null) self::$instance = new Crud($conexao, $config);
+        return self::$instance;
     }
 
     //ENDEREÇO DO SERVIDOR

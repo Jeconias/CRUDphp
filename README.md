@@ -20,21 +20,21 @@ Você pode iniciar a classe de 3 maneiras distintas, quem decide é você! ;)
 Você pode utilizar sua classe de conexão com o banco de dados e passar a conexão atual para o CRUD.
 
     $pdo = 'Seu objeto de conexão com o banco de dados';
-    $crud = new \PlusCrud\Crud\CRUD($pdo);
+    $crud = \PlusCrud\Crud\CRUD::getInstance($pdo);
 
 #### Modo 2:
 Você pode utilizar **define** ou array.
 
     define('CONFIG', ['localhost', 'teste', 'root', 'senha' ]);
-    $crud = new \PlusCrud\Crud\CRUD(null, CONFIG);
+    $crud = \PlusCrud\Crud\CRUD::getInstance(null, CONFIG);
     ------------------------------------------------------------------------------
     $config = array('localhost', 'teste', 'root', 'senha');
-    $crud = new \PlusCrud\Crud\CRUD(null, $config);
+    $crud = \PlusCrud\Crud\CRUD::getInstance(null, $config);
 
 #### Modo 3:
 Se você não quiser utilizar **define** ou **array**, utilize os métodos internos do CRUD.  
 
-    $crud = new \PlusCrud\Crud\CRUD();
+    $crud = \PlusCrud\Crud\CRUD::getInstance();
     $crud->setDBHost('localhost');
     $crud->setDBName('teste');
     $crud->setDBUser('root');
@@ -232,11 +232,16 @@ Correção do composer.json
 
 - 1.1.2
 
-- Adiconado método para verificação de conexão com o banco de dados.
+Adiconado método para verificação de conexão com o banco de dados.
 
 - 1.1.3
 
-- Correção para o método **selectManual**
+Correção para o método **selectManual**.
+
+- 1.1.4
+
+Adicionado o padrão singleton.
+Agora você deve solicitar uma instancia utilizando o método static getInstance().
 
 
 ## Sobre
