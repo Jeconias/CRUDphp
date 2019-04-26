@@ -6,7 +6,7 @@
  * @license     https://opensource.org/licenses/MIT - MIT License
  * @see         https://github.com/jeconiassantos/CRUDphp Documentação
  * @copyright   Jeconias Santos
- * @since       v1.1.5
+ * @since       v1.1.6
  * 
  *  Você pode utilizar essa class como quiser, contando que mantenha os créditos
  *  originais em todas as cópias!
