@@ -1,5 +1,5 @@
 {
-  "name": "pluscrud/pluscrud",
+  "name": "pluscrud/crud",
   "type": "library",
   "version": "1.1.5",
   "description": "Um PlusCrud para otimizar suas consultas.",
@@ -22,7 +22,7 @@
   },
   "autoload":{
     "psr-4":{
-      "PlusCrud\\PlusCrud\\": "src/"
+      "PlusCrud\\crud\\": "src/"
     }
   }
 }
