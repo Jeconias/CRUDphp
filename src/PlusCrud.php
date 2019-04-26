@@ -4,6 +4,7 @@
  * @package     PlusCrud
  * @author      Jeconias Santos <jeconiass2009@hotmail.com>
  * @license     https://opensource.org/licenses/MIT - MIT License
+ * @see         https://github.com/jeconiassantos/CRUDphp Documentação
  * @copyright   Jeconias Santos
  * @since       v1.1.5
  * 
@@ -15,7 +16,7 @@
  */
 namespace PlusCrud;
 
-class PlusCrud
+final class PlusCrud
 {   
 
     /** 
@@ -131,7 +132,7 @@ class PlusCrud
      */
     public static function getInstance(?PDO $conexao = null, ?Array $config = null)
     {
-        if(self::$instance === null) self::$instance = new Crud($conexao, $config);
+        if(self::$instance === null) self::$instance = new PlusCrud($conexao, $config);
         return self::$instance;
     }
 
@@ -145,7 +146,7 @@ class PlusCrud
     {
         $this->DBHost = $v;
         $this->log .= $this->language['translation']['action_dbhost'].'<br>';
-        return $this->instance;
+        return self::$instance;
     }
     
 
@@ -158,7 +159,7 @@ class PlusCrud
     {
         $this->DBName = $v;
         $this->log .= $this->language['translation']['action_dbname'].'<br>';
-        return $this->instance;
+        return self::$instance;
     }
 
 
@@ -171,7 +172,7 @@ class PlusCrud
     {
         $this->DBUser = $v;
         $this->log .= $this->language['translation']['action_dbuser'].'<br>';
-        return $this->instance;
+        return self::$instance;
     }
     
 
@@ -184,7 +185,7 @@ class PlusCrud
     {
         $this->DBPass = $v;
         $this->log .= $this->language['translation']['action_dbpass'].'<br>';
-        return $this->instance;
+        return self::$instance;
     }
 
 
@@ -215,6 +216,11 @@ class PlusCrud
             $this->log .= 'Erro: A variável <b>$valores</b> do método <b>'.__FUNCTION__.'</b> não é uma array;<br>';
             return null;
         }
+
+        if ($valores == null) {
+            $this->log .= 'Erro: A variável <b>$valores</b> do método <b>'.__FUNCTION__.'</b> é null;<br>';
+            return null;
+        }
         
         if ($this->conexao == null) {
           $this->log .= $this->language['translation']['error_connection'].'<br>';
@@ -234,7 +240,7 @@ class PlusCrud
      * 
      * @return array|null
      */
-    public function select(array $tabela, array $valores, array $where = null, int $limit = null, array $order = null) : ?array
+    public function select(string $tabela, array $valores, ?array $where = null, ?int $limit = null, ?array $order = null) : ?array
     {
         if (!is_array($valores)) {
             $this->log .= 'Erro: A variável <b>$valores</b> do método <b>'.__FUNCTION__.'</b> não é uma array;<br>';
@@ -246,7 +252,10 @@ class PlusCrud
             $this->log .= 'Erro: A variável <b>$order</b> do método <b>'.__FUNCTION__.'</b> não é uma array;<br>';
             return null;
         }elseif ($where != null && !isset($where['joker'])) {
-          $this->log .= $this->language['translation']['warning_jokers'].'<br>';
+            $this->log .= $this->language['translation']['warning_jokers'].'<br>';
+        }elseif ($valores == null){
+            $this->log .= 'Erro: A variável <b>$valores</b> do método <b>'.__FUNCTION__.'</b> está null;<br>';
+            return null;
         }
 
         if ($this->conexao == null) {
@@ -272,46 +281,60 @@ class PlusCrud
         return $this->selectSql($sql, $valores);
     }
 
-    //ATUALIZAR DADOS NO BANCO DE DADOS
-    public function update($tabela, $valores, $where, $senha = 'senha')
+    
+    /** 
+     * @param string $tabela Nome da tabela.
+     * @param array $valores
+     * @param array $where
+     * @param string $senha
+     * 
+     * @return int|null
+     */
+    public function update(string $tabela, array $valores, array $where, ?string $senha = 'senha') : ?int
     {
         if (!is_array($valores)) {
             $this->log .= 'Erro: A variável <b>$valores</b> do método <b>'.__FUNCTION__.'</b> não é uma array;<br>';
-            $this->Atualizado = false;
-            return false;
+            return null;
         } elseif ($where !== null && !is_array($where)) {
             $this->log .= 'Erro: A variável <b>$where</b> do método <b>'.__FUNCTION__.'</b> não é uma array;<br>';
-            $this->Atualizado = false;
-            return false;
+            return null;
+        }elseif($valores == null){
+            $this->log .= 'Erro: A variável <b>$valores</b> do método <b>'.__FUNCTION__.'</b> está null;<br>';
+            return null;
         }
 
         if ($this->conexao == null) {
           $this->log .= $this->language['translation']['error_connection'].'<br>';
-          return false;
+          return null;
         }
 
         return $this->actionUpdate($tabela, $valores, $where, $senha);
     }
 
-    //REMOVER REGISTROS DO BANCO DE DADOS
-    public function delete($tabela, $where = null)
+    
+    /** 
+     * @param string $tabela Nome da tabela.
+     * @param array $where
+     * 
+     * @return int|null
+     */
+    public function delete(string $tabela, ?array $where = null) : ?int
     {
         if ($where !== null && !is_array($where)) {
             $this->log .= 'Erro: A variável <b>$where</b> do método <b>'.__FUNCTION__.'</b> não é uma array;<br>';
-            $this->Removido = false;
-            return false;
+            return null;
         }
 
         if ($this->conexao == null) {
           $this->log .= $this->language['translation']['error_connection'].'<br>';
-          return false;
+          return null;
         }
 
         return $this->actionDelete($tabela, $where);
     }
 
     //RETORNA O LOG GERADO DURANTE A UTILIZAÇÃO DA INSTÂNCIA DA CLASS
-    public function log():string
+    public function log() : string
     {
         return $this->log;
     }
@@ -324,8 +347,12 @@ class PlusCrud
         $this->pdo($this->DBHost, $this->DBName, $this->DBUser, $this->DBPass);
     }
 
-    /* VERIFICAR SE A CONEXÃO COM O BANCO DE DADOS EXISTE */
-    public function connStatus():bool
+
+    /**
+     * VERIFICAR SE A CONEXÃO COM O BANCO DE DADOS EXISTE  
+     * @return bool
+     */
+    public function connStatus() : bool
     {
         if($this->conexao instanceof PDO) return true;
         return false;
@@ -433,7 +460,7 @@ H:i:s').';';
     }
 
     //SELECIONAR REGISTROS
-    private function actionSelect($tabela, $valores, $where, $limit, $orderBy)
+    private function actionSelect(string $tabela, array $valores, ?array $where, ?int $limit, ?array $orderBy)
     {
         try {
             if ($where != null) {
@@ -446,7 +473,7 @@ H:i:s').';';
                 $a = 1;
                 while ($a < $count) {
                     if (!ctype_alpha($where[$a])) {
-                        return false;
+                        return null;
                     }
                     if ($count > 1 && $where[$a] != 'joker') {
                         $joker = isset($arr_where['joker'][$a])?$arr_where['joker'][$a]:'=';
@@ -497,7 +524,7 @@ H:i:s').';';
     }
 
     //SELECIONAR REGISTROS COM SQL MONTADA
-    private function selectSql($sql, $valores)
+    private function selectSql(string $sql, ?array $valores) : ?array
     {
         try {
 
@@ -513,12 +540,12 @@ H:i:s').';';
             return $query->fetchAll(\PDO::FETCH_ASSOC);
         } catch (\Exception $e) {
             $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
-            return false;
+            return null;
         }
     }
 
     //ATUALIZAR REGISTROS
-    private function actionUpdate($tabela, $valores, $where, $senha)
+    private function actionUpdate(string $tabela, array $valores, array $where, ?string $senha)
     {
         try {
             $key = array_keys($valores);
@@ -534,7 +561,7 @@ H:i:s').';';
             $a = 1;
             while ($a < $count) {
                 if (!ctype_alpha($where[$a])) {
-                    return false;
+                    return null;
                 }
                 if (count($where) > 1) {
                     $where_sql .= ' AND '.$where[$a].'=:'.$where[$a];
@@ -559,11 +586,11 @@ H:i:s').';';
             return $query->rowCount();
         } catch (\Exception $e) {
             $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
-            return false;
+            return null;
         }
     }
     //REMOVER REGISTROS
-    private function actionDelete($tabela, $where)
+    private function actionDelete(string $tabela, array $where) : ?int
     {
         try {
             if ($where != null) {
@@ -597,11 +624,11 @@ H:i:s').';';
             return $query->rowCount();
         } catch (\Exception $e) {
             $this->log .= 'Erro: '.$e->getMessage().' | '.$_SERVER['REMOTE_ADDR'].' | '.date('d-m-Y H:i:s').';<br>';
-            return false;
+            return null;
         }
     }
 
-    private function changeLanguage($lang, $directory)
+    private function changeLanguage(string $lang, string $directory) : bool
     {
       $file = $directory . '/class.pluscrud.lang.'.$lang.'.php';
 
@@ -642,7 +669,7 @@ H:i:s').';';
         return $retorno;
     }
 
-    private function hash($senha)
+    private function hash(string $senha)
     {
         return crypt($senha, '$2a$10$' . $this->salt() . '$');
     }
