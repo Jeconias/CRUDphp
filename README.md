@@ -210,7 +210,7 @@ Correção para múltiplos inserts.
 
 Agora é possível utilizar WHERE com outras condições (>, <>, <, etc...);
 
-Corrigido o problema para inserir arrays multidimensional
+Corrigido o problema para inserir arrays multidimensional.
 
 - 1.0.9
 
@@ -224,11 +224,11 @@ A versão 1.0.9 **NÃO** é compatível com as anteriores.
 
 - 1.1.0
 
-Organização estrutural
+Organização estrutural.
 
 - 1.1.1
 
-Correção do composer.json
+Correção do composer.json.
 
 - 1.1.2
 
@@ -240,8 +240,14 @@ Correção para o método **selectManual**.
 
 - 1.1.4
 
-Adicionado o padrão singleton.
+Adicionado o padrão singleton;
 Agora você deve solicitar uma instancia utilizando o método static getInstance().
+
+- 1.1.5
+
+Melhorado a estrutura para compreensão de outros programadores;
+Removido alguns processos;
+Essa é uma versão de teste e ainda irei finalizar/atualizar a documentação.
 
 
 ## Sobre
