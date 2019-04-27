@@ -1,7 +1,7 @@
 {
-  "name": "pluscrud/pluscrud",
+  "name": "pluscrud/crud",
   "type": "library",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "Um PlusCrud para otimizar suas consultas.",
   "homepage": "https://github.com/jeconiassantos/CRUDphp",
   "license": "MIT",
@@ -17,7 +17,7 @@
     }
   ],
   "require": {
-    "php": ">=5.4.0",
+    "php": ">=7.1.0",
     "ext-pdo": "*"
   },
   "autoload":{

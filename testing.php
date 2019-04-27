@@ -8,9 +8,9 @@ require_once('./crud/PlusCrud.php');
 
 $c = \PlusCrud\PlusCrud::getInstance();
 $c->setDBHost('localhost');
-$c->setDBName('crm');
+$c->setDBName('hausnbizapi');
 $c->setDBUser('root');
-$c->setDBPass('123');
+$c->setDBPass('');
 $c->run();
 
 print_r($c->log());
