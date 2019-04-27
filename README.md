@@ -20,21 +20,21 @@ Você pode iniciar a classe de 3 maneiras distintas, quem decide é você! ;)
 Você pode utilizar sua classe de conexão com o banco de dados e passar a conexão atual para o CRUD.
 
     $pdo = 'Seu objeto de conexão com o banco de dados';
-    $crud = \PlusCrud\Crud\CRUD::getInstance($pdo);
+    $crud = \PlusCrud\PlusCrud::getInstance($pdo);
 
 #### Modo 2:
 Você pode utilizar **define** ou array.
 
     define('CONFIG', ['localhost', 'teste', 'root', 'senha' ]);
-    $crud = \PlusCrud\Crud\CRUD::getInstance(null, CONFIG);
+    $crud = \PlusCrud\PlusCrud::getInstance(null, CONFIG);
     ------------------------------------------------------------------------------
     $config = array('localhost', 'teste', 'root', 'senha');
-    $crud = \PlusCrud\Crud\CRUD::getInstance(null, $config);
+    $crud = \PlusCrud\PlusCrud::getInstance(null, $config);
 
 #### Modo 3:
 Se você não quiser utilizar **define** ou **array**, utilize os métodos internos do CRUD.  
 
-    $crud = \PlusCrud\Crud\CRUD::getInstance();
+    $crud = \PlusCrud\PlusCrud::getInstance();
     $crud->setDBHost('localhost');
     $crud->setDBName('teste');
     $crud->setDBUser('root');
@@ -210,7 +210,7 @@ Correção para múltiplos inserts.
 
 Agora é possível utilizar WHERE com outras condições (>, <>, <, etc...);
 
-Corrigido o problema para inserir arrays multidimensional
+Corrigido o problema para inserir arrays multidimensional.
 
 - 1.0.9
 
@@ -224,11 +224,11 @@ A versão 1.0.9 **NÃO** é compatível com as anteriores.
 
 - 1.1.0
 
-Organização estrutural
+Organização estrutural.
 
 - 1.1.1
 
-Correção do composer.json
+Correção do composer.json.
 
 - 1.1.2
 
@@ -240,9 +240,27 @@ Correção para o método **selectManual**.
 
 - 1.1.4
 
-Adicionado o padrão singleton.
+Adicionado o padrão singleton;
+
 Agora você deve solicitar uma instancia utilizando o método static getInstance().
 
+- 1.1.5
+
+Melhorado a estrutura para compreensão de outros programadores;
+Removido alguns processos;
+
+Essa é uma versão de teste e ainda irei finalizar/atualizar a documentação.
+
+- 1.1.8
+
+Você deve pegar uma instancia dessa forma agora: \PlusCrud\PlusCrud::getInstance(). Você pode
+passar os argumentos pelo método.
+
+Essa versão ou as superiores são compatíveis apenas com o PHP 7.1.x ou maior.
+
+- 1.1.9
+
+Alteração do README.md
 
 ## Sobre
 - Licença: [MIT License](https://opensource.org/licenses/MIT)
